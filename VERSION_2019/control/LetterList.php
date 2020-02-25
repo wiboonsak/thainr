@@ -1,0 +1,106 @@
+<?php 
+    $rowPerPage=20;
+			if((!$_GET['page'])||($_GET['page']==1)){
+						$_GET['page']=1;
+						$startRow=0;
+			}else{
+					$startRow=($_GET['page']-1)*$rowPerPage;
+			}	
+	####################################################
+	if($_POST['action']=='Delete'){
+			 $query="SELECT * FROM `tbl_newsletter_data` WHERE  `id` =  '".$_POST['IDS']."' ";
+			 //echo $query."<br>";
+			  $resultPic=mysql_query($query);
+			  $file=mysql_fetch_assoc($resultPic);
+	 					@unlink($path_product.$file['images']);
+						@unlink($path_product_thb.$file['images']);
+	 					@unlink($path_product.$file['attachfile']);					 
+			$query="DELETE FROM `tbl_newsletter_data`  WHERE  `id` =  '".$_POST['IDS']."' ";
+			mysql_query($query);	
+		}
+
+	####################################################
+              $query="SELECT * FROM   `tbl_newsletter_data`  ORDER BY id DESC";
+				$queryLimit= $query." LIMIT $startRow , $rowPerPage "	;			
+				$result=mysql_query($queryLimit);
+
+				$resultBrowse2=mysql_query($query);		
+				$xrow=mysql_num_rows($resultBrowse2);
+				$totalPage=ceil($xrow/$rowPerPage);			
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="javascript">
+		function deleteThis(ids){
+					if(confirm('ต้องการลบหัวข้อนี้ ?')){
+								document.form1.action.value='Delete';
+								document.form1.IDS.value=ids;
+								document.form1.submit();
+						}else{
+								return false;
+							}
+			
+			}
+</script>
+</head>
+
+<body><form action="<?php $_SERVER['PHP_SELF']?>" method="post" name="form1" enctype="multipart/form-data">
+<table width="99%" border="0" align="center" cellpadding="2" cellspacing="2">
+  <tr class="red">
+    <td width="4%" height="25" align="center" bgcolor="#D9D9B3"><img src="images/black_icon/16x16/app_window.png" width="16" height="16" /></td>
+    <td width="96%" bgcolor="#D9D9B3">รายชื่อจดหมาย
+
+    
+      <input type="hidden" name="action" id="action" />
+      <input type="hidden" name="IDS" id="IDS" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><table width="100%" border="0" cellpadding="2" cellspacing="2" class="txt10-black">
+      <tr>
+        <td width="5%" bgcolor="#E1E1E1">&nbsp;</td>
+        <td width="79%" align="center" bgcolor="#E1E1E1">หัวข้อ</td>
+        <td width="8%" align="center" bgcolor="#E1E1E1">แก้ไข</td>
+        <td width="8%" align="center" bgcolor="#E1E1E1">ลบ</td>
+      </tr>
+      <?php while($data=mysql_fetch_assoc($result)){ 
+	  					if($data['statistic_type']=='thai'){
+									$work='StatThai';
+							}
+	  					if($data['statistic_type']=='world'){
+									$work='StatWorld';
+							}	
+						if($data['statistic_type']=='other'){
+									$work='StatOther';
+							}	   
+	  ?>
+      <tr>
+        <td align="center" bgcolor="#EFEFEF"><img src="images/black_icon/16x16/2x2_grid.png" alt="" width="16" height="16" /></td>
+        <td bgcolor="#EFEFEF"><?php echo $data['topic']?><br /></td>
+        <td align="center" bgcolor="#EFEFEF"><a href="main.php?work=addLetter&currentID=<?PHP echo $data['id']?>"><img src="images/black_icon/16x16/doc_edit.png" alt="" width="16" height="16" style="border:none" /></a></td>
+        <td align="center" bgcolor="#EFEFEF"><a href="#" onclick="deleteThis('<?php echo $data['id']?>')"><img src="images/black_icon/16x16/round_delete.png" alt="" width="16" height="16"  style="border:none"  /></a></td>
+      </tr>
+      <?php } ?>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="txt10-black">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2"><span class="txt10-black">หน้า :
+        <?php  for($i=1;$i<= $totalPage ; $i++){ ?>
+        <?php  if($_POST['page']==$i){ echo "<strong>[ ";} ?>
+        <a href="#" onclick="document.form1.page.value='<?php echo $i?>';document.form1.submit()">
+        <?php   echo $i;?>
+        </a>
+        <?php  if($_POST['page']==$i){ echo " ] </strong>";}?>
+        <?php }?>
+    </span></td>
+  </tr>
+</table>
+</form>
+</body>
+</html>

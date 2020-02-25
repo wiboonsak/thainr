@@ -1,0 +1,51 @@
+<?php
+require './libs/config.inc.php';
+require './libs/ajax.php'; 
+require './libs/mysql.php';
+require './libs/function.php';
+
+require './languages/lang_th.php';
+require './funcs/func_chat.php';
+
+	
+	////////--Clear messgage -///////////
+		function clear_msg(){
+			$messagesClear="";
+				$fp = fopen($webSite['pathMsg'],'w');
+				if(flock($fp,2)) {
+					fputs($fp,$messagesClear);
+					flock($fp,1);
+				}
+				fclose($fp);
+			}
+		$DB->conn();
+		$today=date("Y-m-d");
+			//---check ROW DATA
+			$query="SELECT * FROM tbl_clear_chat_log ";
+			$result = mysql_query($query);
+			$nrow=mysql_num_rows($result);
+			 if($nrow ==0){
+				 echo "1";
+				$query = "INSERT INTO `tbl_clear_chat_log` "
+				." (`id` ,`clear_time` ,`is_clear` )VALUES ( '', '$today', '1') ";
+				mysql_query($query);
+				clear_msg();
+				$query = "UPDATE `tbl_clear_chat_log` SET clear_time= '".$today."' ";
+				mysql_query($query);
+			 }
+			//-----------------------------
+			$today = date("Y-m-d");
+			$query = "SELECT * FROM tbl_clear_chat_log WHERE clear_time='$today'  ";
+			$result=mysql_query($query);
+			$row=mysql_num_rows($result);
+			
+				if($row < 1){
+					//clear_msg();
+					echo "2";
+				}
+		
+		$DB->closeconn();
+	   ///////---------------------------./////////////
+
+header('Location: chatroom/contents.php');
+?>

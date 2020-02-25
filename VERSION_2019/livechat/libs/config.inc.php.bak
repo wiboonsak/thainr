@@ -1,0 +1,21 @@
+<?php
+$mySql['host'] = 'localhost';
+$mySql['usql'] = 'root';
+$mySql['psql'] = '1234';
+$mySql['database'] = 'meficom_thainr';
+
+
+
+$webSite['pathMsg'] = '../data/$filename'; // ที่อยู่ของ messages
+
+
+$webSite['limitMsg'] = 30; // เก็บข้อความไว้ที่ระบบสูงสุด (ไม่ควรตั้งไว้มากนัก)
+$webSite['limitTime'] = 300; // ค่า useronline (แนะนำว่าไม่ควรแก้)
+
+$webSite['intro'] = 'Thaiware Chatroom beta version 1.0 Power by Tee++;';
+$webSite['copyright'] = '&copy; 2005 - 2006 Thaiware Communication Co.,Ltd. All rights reserved.';
+
+
+
+
+?>

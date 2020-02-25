@@ -1,0 +1,51 @@
+<?php
+	include("../control/config.inc.php"); 
+	include("phpgraphlib.php"); 
+	
+	$link = mysql_connect($db_host,$db_user,$db_password) or die("Could not connect");
+	mysql_select_db($db_name) or die("Could not select database");	
+
+	$query = "SELECT * FROM tbl_rubber_offer  WHERE id = '$id' ";
+	$result = mysql_query($query);
+		while($data=mysql_fetch_assoc($result)){
+				$p1 = $data['cake_rubber_01'];
+				$p2 = $data['cake_rubber_02'];		
+				$p3 = $data['STR_20_01'];
+				$p4 = $data['STR_20_02'];		
+				$p5 = $data['STR_5L_01'];
+				$p6 = $data['STR_5L_02'];
+				$p7 = $data['liquid_01'];
+				$p8 = $data['liquid_02'];
+				$p9 = $data['date_update'];				
+				}
+
+$graph=new PHPGraphLib(1000,250);
+
+
+$data=array("Rubber Bale Bkk"=>$p1,"Rubber Bale SK./PK."=>$p2,"STR20 BKK."=>$p3,"STR20 SK./PK."=>$p4,"STR 5L BKK"=>$p5,"STR 5L SK./PK."=>$p6,"Latex BKK"=>$p7,"Latex SK./PK."=>$p8);
+
+
+$graph->addData($data);
+$graph->setTitle("Local Price $StartDate");
+$graph->setBars(false);
+$graph->setLine(true);
+$graph->setDataPoints(true);
+$graph->setDataPointColor("blue");
+$graph->setDataValues(true);
+$graph->setDataValueColor("red");
+
+$graph->setXValuesHorizontal(false); 
+$graph->setXValuesHorizontal(true); 
+
+$graph->setXAxisTextColor("maroon"); 
+$graph->setYAxisTextColor("maroon"); 
+
+$graph->setLineColor("lime", "red","blue"); 
+
+
+//$graph->setGoalLine(.0025);
+//$graph->setGoalLineColor("red");
+$graph->createGraph();
+mysql_close($link);
+
+?>
